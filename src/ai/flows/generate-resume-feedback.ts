@@ -82,6 +82,9 @@ const resumeFeedbackPrompt = ai.definePrompt({
   name: 'resumeFeedbackPrompt',
   input: {schema: GenerateResumeFeedbackInputSchema},
   output: {schema: PromptOutputSchema},
+  config: {
+    temperature: 0,
+  },
   prompt: `You are an AI resume expert and ATS (Applicant Tracking System) specialist, acting as a senior hiring manager. Analyze the provided resume against the given job description with meticulous, line-by-line detail.
 
 Your primary goal is to provide a comprehensive analysis with scores, a detailed report, and structured feedback.

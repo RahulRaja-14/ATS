@@ -19,35 +19,29 @@ export async function analyzeResumeAction(
   prevState: AnalysisState,
   formData: FormData
 ): Promise<AnalysisState> {
-  const file = formData.get('resume') as File | null;
-  const jobDescription = formData.get('jobDescription')?.toString() || '';
-  const experienceLevel = formData.get('experienceLevel')?.toString() || 'entry';
-
-  if (!file || file.size === 0) {
-    return { data: null, error: 'Please select a resume file to upload.' };
-  }
-
-  const allowedTypes = [
-    'application/pdf',
-    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-  ];
-
-  if (!allowedTypes.includes(file.type)) {
-    return {
-      data: null,
-      error: 'Invalid file type. Please upload a PDF or DOCX file.',
-    };
-  }
-
-  // 5MB size limit
-  if (file.size > 5 * 1024 * 1024) {
-    return {
-      data: null,
-      error: 'File is too large. Please upload a file smaller than 5MB.',
-    };
-  }
-
   try {
+    const file = formData.get('resume') as File | null;
+    const jobDescription = formData.get('jobDescription')?.toString() || '';
+    const experienceLevel = formData.get('experienceLevel')?.toString() || 'entry';
+
+    if (!file || file.size === 0) {
+      throw new Error('Please select a resume file to upload.');
+    }
+
+    const allowedTypes = [
+      'application/pdf',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    ];
+
+    if (!allowedTypes.includes(file.type)) {
+      throw new Error('Invalid file type. Please upload a PDF or DOCX file.');
+    }
+
+    // 5MB size limit
+    if (file.size > 5 * 1024 * 1024) {
+      throw new Error('File is too large. Please upload a file smaller than 5MB.');
+    }
+
     const resumeDataUri = await fileToDataUri(file);
 
     // Pass both resume and job description
