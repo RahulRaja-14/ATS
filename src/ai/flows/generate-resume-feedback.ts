@@ -43,7 +43,7 @@ export type GenerateResumeFeedbackOutput = z.infer<typeof GenerateResumeFeedback
 
 // Schema for the prompt's output, which now includes fields for the AI to "show its work".
 const PromptOutputSchema = GenerateResumeFeedbackOutputSchema.omit({ matchRate: true }).extend({
-  jobHardSkills: z.array(z.string()).describe('The top 10 most critical hard skills identified from the job description.'),
+  jobHardSkills: z.array(z.string()).describe('A list of all critical hard skills identified from the job description.'),
   foundResumeSkills: z.array(z.string()).describe('The skills from the jobHardSkills list that were found in the resume.')
 });
 
@@ -84,6 +84,7 @@ const resumeFeedbackPrompt = ai.definePrompt({
   output: {schema: PromptOutputSchema},
   config: {
     temperature: 0,
+    topP: 0.1,
   },
   prompt: `You are an AI resume expert and ATS (Applicant Tracking System) specialist, acting as a senior hiring manager. Analyze the provided resume against the given job description with meticulous, line-by-line detail.
 
@@ -118,9 +119,9 @@ You MUST adjust your analysis and scoring based on this level.
         *   **4-5:** Moderate alignment. Some transferable skills, but experience is in a different domain or lacks focus.
         *   **1-3:** Poor alignment. Little to no connection between the resume's content and the job description.
     *   **\`hardSkillsScore\`: To calculate this score, you MUST first complete the \`jobHardSkills\` and \`foundResumeSkills\` fields. Your scoring MUST strictly follow this logic:**
-        *   First, in the \`jobHardSkills\` field, list the top 10 most critical hard skills from the job description.
+        *   First, in the \`jobHardSkills\` field, list all of the critical hard skills from the job description.
         *   Second, review the resume and in the \`foundResumeSkills\` field, list the skills from your first list that are present.
-        *   Finally, calculate the score: **Score = (Number of items in \`foundResumeSkills\` / 10) * 10.** Round to the nearest whole number.
+        *   Finally, calculate the score: **Score = (Number of items in \`foundResumeSkills\` / Number of items in \`jobHardSkills\`) * 10.** Round to the nearest whole number. If \`jobHardSkills\` is empty, the score should be 0.
     *   **\`softSkillsScore\`: Measure the match between soft skills (e.g., communication, teamwork) on the resume and those implied or stated in the job description. Your scoring MUST follow this rubric:**
         *   **10:** Clear.
         *   **8-9:** Evidence for most key soft skills.

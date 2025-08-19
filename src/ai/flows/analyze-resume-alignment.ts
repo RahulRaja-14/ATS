@@ -55,6 +55,7 @@ const analyzeResumeAlignmentPrompt = ai.definePrompt({
   output: { schema: AnalyzeResumeAlignmentOutputSchema },
   config: {
     temperature: 0,
+    topP: 0.1,
   },
   prompt: `
     You are an expert resume analyst. Your task is to provide a detailed, objective, and consistent analysis of the provided resume.
@@ -84,7 +85,7 @@ const analyzeResumeAlignmentPrompt = ai.definePrompt({
         -   **0**: Unprofessional, cluttered, or distracting design.
 
     **Instructions:**
-    1.  For each criterion, provide a score and a detailed justification.
+    1.  For each criterion, provide a score and a detailed justification based strictly on the rubric.
     2.  Calculate the overall score as a weighted average of the component scores.
     3.  Provide a summary of feedback with actionable suggestions for improvement.
 
