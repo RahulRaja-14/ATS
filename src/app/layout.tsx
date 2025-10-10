@@ -12,7 +12,7 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "AI Resume Analyzer",
+  title: "Scan CV",
   description:
     "Get instant feedback on your resume to improve your chances of landing your dream job.",
 };
