@@ -58,6 +58,10 @@ export async function analyzeResumeAction(
     let errorMessage = 'An unexpected error occurred.';
     if (e instanceof ZodError) {
       errorMessage = e.errors.map((err) => err.message).join(', ');
+    } else if (e instanceof Error && (e.message.includes('403') || e.message.toLowerCase().includes('permission denied'))) {
+      errorMessage = 'API key is missing permissions. Please ensure the Generative Language API is enabled and allowed for this key in your Google Cloud project.';
+    } else if (e instanceof Error && e.message.includes('429')) {
+      errorMessage = 'You have exceeded the free tier limit. Please wait a moment and try again. For higher limits, consider upgrading to a paid Google AI plan.';
     } else if (e instanceof Error) {
       errorMessage = e.message;
     }

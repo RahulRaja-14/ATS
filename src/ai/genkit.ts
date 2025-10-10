@@ -1,7 +1,11 @@
 import {genkit} from 'genkit';
-import {googleAI} from '@genkit-ai/googleai';
+import {googleAI, gemini} from '@genkit-ai/googleai';
 
+// Use the plugin-provided gemini(...) helper so the plugin can map the
+// requested version to a known model reference. The package ships preview
+// model refs for the 2.5 Flash family; use the preview id that the plugin
+// knows about.
 export const ai = genkit({
-  plugins: [googleAI({apiKey: process.env.GOOGLE_API_KEY})],
-  model: 'googleai/gemini-1.5-flash',
+  plugins: [googleAI()],
+  model: gemini('gemini-2.5-flash'),
 });
